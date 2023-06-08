@@ -14,7 +14,6 @@ import { db } from "../firebase";
 import ListingItem from "../components/ListingItem";
 import { useParams } from "react-router-dom";
 
-
 export default function Category() {
   const [loading, setLoading] = useState(true);
   const [listings, setListings] = useState(null);
@@ -27,7 +26,7 @@ export default function Category() {
         const listingRef = collection(db, "listings");
         const q = query(
           listingRef,
-          where('type', '==', params.categoryName),
+          where("type", "==", params.categoryName),
           orderBy("timestamp", "desc"),
           limit(8)
         );
@@ -48,17 +47,14 @@ export default function Category() {
       }
     }
     fetchListings();
-  }, [ params.categoryName]);
+  }, [params.categoryName]);
 
-
-
-
-  async function onFetchMoreListings(){
+  async function onFetchMoreListings() {
     try {
       const listingRef = collection(db, "listings");
       const q = query(
         listingRef,
-        where('type', '==', params.categoryName),
+        where("type", "==", params.categoryName),
         orderBy("timestamp", "desc"),
         startAfter(lastFetchedListing),
         limit(4)
@@ -73,18 +69,17 @@ export default function Category() {
           data: doc.data(),
         });
       });
-      setListings((prevState)=>[...prevState, ...listings]);
+      setListings((prevState) => [...prevState, ...listings]);
       setLoading(false);
     } catch (error) {
       toast.error("Could not fetch listing!");
     }
   }
-  
 
   return (
     <div className="max-w-6xl mx-auto px-3">
       <h1 className="text-3xl text-center mt-6 font-bold mb-6">
-        { params.categoryName === 'rent' ? 'Places for Rent' : 'Places for sale'}
+        {params.categoryName === "rent" ? "Places for Rent" : "Places for sale"}
       </h1>
       {loading ? (
         <Spinner />
@@ -103,17 +98,21 @@ export default function Category() {
           </main>
           {lastFetchedListing && (
             <div className="flex justify-center item-center">
-              <button 
-              onClick={onFetchMoreListings}
-              className="bg-white px-3 py-1.5 text-gray-700 border border-gray-300 mb-6 mt-6
-              hover:border-slate-600 transition duration-150 rounded ease-in-out">
+              <button
+                onClick={onFetchMoreListings}
+                className="bg-white px-3 py-1.5 text-gray-700 border border-gray-300 mb-6 mt-6
+              hover:border-slate-600 transition duration-150 rounded ease-in-out"
+              >
                 Load more
               </button>
             </div>
           )}
         </>
       ) : (
-        <p>There are no current offers.</p>
+        <p>
+          There are no places for{" "}
+          {params.categoryName === "rent" ? "rent" : "sale"}.
+        </p>
       )}
     </div>
   );
