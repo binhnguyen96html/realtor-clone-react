@@ -110,8 +110,8 @@ export default function Category() {
         </>
       ) : (
         <p>
-          There are no places for{" "}
-          {params.categoryName === "rent" ? "rent" : "sale"}.
+          There are no places for 
+          {params.categoryName === "rent" ? " rent" : " sale"}.
         </p>
       )}
     </div>
